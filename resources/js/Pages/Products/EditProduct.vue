@@ -37,7 +37,7 @@ const form = useForm({
 })
 
 const submit = () => {
-  form.post('/products/update/{product: props.product.id}', {
+  form.post('/products/update/' + props.product.id, {
     preserveScroll: true,
     onSuccess: () => {
       alert('Product updated successfully')
