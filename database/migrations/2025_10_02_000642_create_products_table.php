@@ -18,6 +18,9 @@ return new class extends Migration
             $table->string('barcode')->nullable();
             $table->decimal('price', 10, 2);
             $table->integer('stock')->default(0);
+            $table->foreignId('category_id')->nullable();
+            $table->foreignId('brand_id')->nullable();
+            $table->foreignId('unit_id')->nullable();
             $table->decimal('tax', 5, 2)->default(0)->nullable(); // percentage
             $table->decimal('discount', 5, 2)->default(0)->nullable(); // percentage
             $table->timestamps();
