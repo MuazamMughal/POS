@@ -3,12 +3,13 @@ import { Link } from '@inertiajs/vue3';
 </script>
 
 <template>
-    <div class="flex h-screen bg-gray-100">
+    <div class="flex w-full h-screen bg-gray-100">
       <!-- Sidebar -->
       <aside class="w-64 bg-white shadow-lg">
         <div class="p-4 text-xl font-bold border-b">POS System</div>
         <nav class="p-4 space-y-2">
           <Link href="/dashboard" class="block p-2 rounded hover:bg-gray-200">Dashboard</Link>
+          <Link href="/detailings" class="block p-2 rounded hover:bg-gray-200">Detailings</Link>
           <Link href="/products" class="block p-2 rounded hover:bg-gray-200">Products</Link>
           <Link href="/sales" class="block p-2 rounded hover:bg-gray-200">Sales</Link>
           <Link href="/customers" class="block p-2 rounded hover:bg-gray-200">Customers</Link>

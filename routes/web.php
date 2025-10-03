@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardHome;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
@@ -14,10 +15,15 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
-
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', [DashboardHome::class, 'index'])->name('dashboard');
+    Route::get('/detailings', [DashboardHome::class, 'detailings'])->name('detailings');
+    
+    // Separate routes for each type
+    Route::post('/detailings/category', [DashboardHome::class, 'storeCategory'])->name('store.category');
+    Route::post('/detailings/brand', [DashboardHome::class, 'storeBrand'])->name('store.brand');
+    Route::post('/detailings/unit', [DashboardHome::class, 'storeUnit'])->name('store.unit');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
