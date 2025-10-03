@@ -95,7 +95,7 @@ const submitUnit = async () => {
           </div>
           <button
             type="submit"
-            class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50"
+            class="w-full bg-gray-700 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50"
             :disabled="categoryForm.processing"
           >
             <span v-if="categoryForm.processing">Adding...</span>
@@ -124,7 +124,7 @@ const submitUnit = async () => {
           </div>
           <button
             type="submit"
-            class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50"
+            class="w-full bg-gray-700 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50"
             :disabled="brandForm.processing"
           >
             <span v-if="brandForm.processing">Adding...</span>
@@ -153,7 +153,7 @@ const submitUnit = async () => {
           </div>
           <button
             type="submit"
-            class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50"
+            class="w-full bg-gray-700 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50"
             :disabled="unitForm.processing"
           >
             <span v-if="unitForm.processing">Adding...</span>
