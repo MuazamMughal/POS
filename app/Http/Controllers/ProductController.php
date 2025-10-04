@@ -60,37 +60,62 @@ class ProductController extends Controller
         }
     }
 
-    // public function edit(Product $product)
-    // {
-    //     $categories = Category::all();
-    //     $brands = Brand::all();
+    public function edit(Product $product)
+    {
+        $categories = Category::all();
+        $brands = Brand::all();
+        $units = Unit::all();
 
-    //     return Inertia::render('Products/Edit', [
-    //         'product' => $product,
-    //         'categories' => $categories,
-    //         'brands' => $brands,
-    //     ]);
-    // }
+        return Inertia::render('Products/EditProduct', [
+            'product' => $product,
+            'categories' => $categories,
+            'brands' => $brands,
+            'units' => $units,
+        ]);
+    }
 
-    // public function update(Request $request, Product $product)
-    // {
-    //     $validated = $request->validate([
-    //         'name' => 'required|string',
-    //         'sku' => 'required|unique:products,sku,' . $product->id,
-    //         'price' => 'required|numeric',
-    //         'stock' => 'required|integer',
-    //         'category_id' => 'nullable|exists:categories,id',
-    //         'brand_id' => 'nullable|exists:brands,id',
-    //     ]);
+    public function update(Request $request, Product $product)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'sku' => 'required|string|max:255|unique:products,sku,' . $product->id,
+            'price' => 'required|numeric|min:0',
+            'stock' => 'required|integer|min:0',
+            'category_id' => 'nullable|exists:categories,id',
+            'brand_id' => 'nullable|exists:brands,id',
+            'unit_id' => 'nullable|exists:units,id',
+            'tax' => 'nullable|numeric|min:0|max:100',
+            'discount' => 'nullable|numeric|min:0|max:100',
+            'barcode' => 'nullable|string|max:255',
+        ]);
 
-    //     $product->update($validated);
+        try {
+            DB::beginTransaction();
+            
+            $product->update($validated);
+            
+            DB::commit();
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Product updated successfully',
+                'data' => $product
+            ]);
+            
+        } catch (\Exception $e) {
+            DB::rollBack();
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to update product',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 
-    //     return redirect()->route('products.index');
-    // }
-
-    // public function destroy(Product $product)
-    // {
-    //     $product->delete();
-    //     return redirect()->route('products.index');
-    // }
+    public function destroy(Product $product)
+    {
+        $product->delete();
+        return redirect()->route('products.index');
+    }
 }
