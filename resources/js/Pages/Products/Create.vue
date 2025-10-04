@@ -44,9 +44,13 @@ const submit = () => {
   if (form.errors.name || form.errors.sku || form.errors.price || form.errors.stock || form.errors.category_id || form.errors.brand_id || form.errors.unit_id || form.errors.tax || form.errors.discount) {
     return;
   }
-  form.post('/products', {
+  form.post('/products/store', {
+    preserveScroll: true,
+    preserveState: true,
     onSuccess: () => {
       form.reset()
+      success('Product created successfully')
+      show('Product created successfully')
     }
   })
 }
