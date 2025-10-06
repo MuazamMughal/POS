@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Product;
+use App\Models\Sale;
 use Illuminate\Database\Eloquent\Model;
 
 class SaleItem extends Model
@@ -14,6 +16,9 @@ class SaleItem extends Model
         'total',
     ];
     public function product() {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Product::class , 'product_id', 'id');
+    }
+    public function sale() {
+        return $this->belongsTo(Sale::class , 'sale_id', 'id');
     }
 }

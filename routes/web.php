@@ -3,6 +3,7 @@
 use App\Http\Controllers\DashboardHome;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SaleController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -39,6 +40,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
     Route::put('/products/update/{product}', [ProductController::class, 'update'])->name('products.update');
     
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/pos', [SaleController::class, 'index'])->name('pos.index');
+    Route::post('/pos', [SaleController::class, 'store'])->name('pos.store');
 });
 
 require __DIR__.'/auth.php';
