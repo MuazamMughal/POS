@@ -6,7 +6,9 @@ import { Link } from '@inertiajs/vue3';
     <div class="flex w-full h-screen bg-gray-100">
       <!-- Sidebar -->
       <aside class="w-64 bg-white shadow-lg">
+        <Link href="/pos" class="block p-2 rounded hover:bg-gray-200">
         <div class="p-4 text-xl font-bold border-b">POS System</div>
+        </Link>
         <nav class="p-4 space-y-2">
           <Link href="/dashboard" class="block p-2 rounded hover:bg-gray-200">Dashboard</Link>
           <Link href="/detailings" class="block p-2 rounded hover:bg-gray-200">Detailings</Link>
