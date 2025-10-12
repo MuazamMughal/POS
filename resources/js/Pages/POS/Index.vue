@@ -12,16 +12,23 @@ const props = defineProps({
     default: () => []
   }
 })
-
+const ShowReasonModal = ref(false)
 const cart = useCartStore()
 const search = ref('')
 const showPaymentModal = ref(false)
 const paymentMethod = ref('cash')
 const amountPaid = ref('')
 const discountValue = ref('')
-const discountType = ref('percentage')
+const discountType = ref('')
+if(discountValue.value){
+  discountType.value = 'percentage'
+}else{
+  discountType.value = ''
+}
 const selectedCustomer = ref(null)
 const orderNotes = ref('')
+const discountReason = ref('')
+const TransactionCompletModal = ref(false)
 
 // Filter products based on search
 const filtered = computed(() => 
@@ -49,10 +56,20 @@ const updateQuantity = (item, change) => {
 
 // Apply discount
 const applyDiscount = () => {
+  
   if (discountValue.value) {
-    cart.applyDiscount(parseFloat(discountValue.value), discountType.value, 'Manual discount')
-    discountValue.value = ''
+    cart.applyDiscount(parseFloat(discountValue.value), discountType.value,discountReason.value)
+
   }
+
+}
+
+const SaveReason = () => {
+  applyDiscount()
+  ShowReasonModal.value = false
+}
+const removeDiscount = () => {
+  cart.removeDiscount()
 }
 
 // Process payment
@@ -74,15 +91,26 @@ const processPayment = async () => {
     }
 
     await router.post('/sales', orderData)
+    
+    // Clear cart and reset form on success
     cart.clearCart()
     showPaymentModal.value = false
-    // Reset form
     amountPaid.value = ''
     orderNotes.value = ''
+    cart.discount = null
     selectedCustomer.value = null
+
+    // Show success message
+    TransactionCompletModal.value = true
   } catch (error) {
     console.error('Payment failed:', error)
     alert('Payment processing failed. Please try again.')
+  } finally {
+    showPaymentModal.value = false
+    amountPaid.value = ''
+    orderNotes.value = ''
+    cart.discount = null
+    selectedCustomer.value = null
   }
 }
 
@@ -130,8 +158,8 @@ onMounted(() => {
           <p class="font-bold truncate">{{ product.name }}</p>
           <p class="text-sm text-gray-600">{{ product.sku }}</p>
           <p class="text-sm font-semibold text-green-600 mt-1">{{ formatCurrency(product.price) }}</p>
-          <div v-if="product.stock_quantity !== undefined" class="text-xs text-gray-500">
-            Stock: {{ product.stock_quantity }}
+          <div v-if="product.stock !== undefined" class="text-xs text-gray-500">
+            Stock: {{ product.stock }}
           </div>
         </div>
       </div>
@@ -208,13 +236,28 @@ onMounted(() => {
             class="border p-2 rounded flex-1"
             @keyup.enter="applyDiscount"
           />
-          <button 
+          <button v-if="!cart.discount.value"
+            @click="ShowReasonModal = true"
+            class="bg-orange-500 text-white px-3 rounded hover:bg-orange-600"
+            :disabled="!cart.items.length"
+          >
+            Reason
+          </button>
+          <!-- <button 
             @click="applyDiscount"
             class="bg-blue-500 text-white px-3 rounded hover:bg-blue-600"
             :disabled="!discountValue"
           >
             Apply
+          </button> -->
+          <button v-if="cart.discount.value"
+            @click="removeDiscount"
+            class="bg-red-500 text-white px-3 rounded hover:bg-red-600"
+            :disabled="!cart.discount.value"
+          >
+            Remove
           </button>
+        
         </div>
 
         <!-- Totals -->
@@ -250,6 +293,21 @@ onMounted(() => {
           Pay {{ formatCurrency(cart.total) }}
         </button>
       </div>
+    </div>
+
+    <!-- Reason Modal -->
+    <div v-if="ShowReasonModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+      <div class="bg-white rounded-lg w-full max-w-md p-6">
+        <h3 class="text-xl font-bold mb-4">Reason</h3>
+        <input type="text" 
+        v-model="discountReason"
+        @keyup.enter="applyDiscount" class="w-full border p-2 rounded mb-4">
+        <div class="flex justify-end gap-2">
+          <button @click="ShowReasonModal = false" class="bg-blue-500 text-white px-3 rounded hover:bg-blue-600">Close</button>
+      <button @click="SaveReason" class="bg-green-500 text-white px-3 rounded hover:bg-green-600">Apply Discount</button>
+        </div>
+      </div>
+
     </div>
 
     <!-- Payment Modal -->
@@ -318,6 +376,17 @@ onMounted(() => {
             >
               Complete Sale
             </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div v-if="TransactionCompletModal" class="fixed inset-0 z-50 overflow-y-auto">
+      <div class="flex items-center justify-center min-h-screen">
+        <div class="bg-white rounded-lg w-full max-w-md p-6">
+          <h3 class="text-xl font-bold mb-4">Transaction Completed</h3>
+          <p class="text-gray-600 mb-4">Thank you for your purchase!</p>
+          <div class="flex justify-end gap-2">
+            <button @click="TransactionCompletModal = false" class="bg-blue-500 text-white px-3 rounded hover:bg-blue-600">Close</button>
           </div>
         </div>
       </div>

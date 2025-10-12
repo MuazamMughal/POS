@@ -25,7 +25,6 @@ class SaleController extends Controller
     public function store(Request $request)
     {
         // Validate the incoming request
- 
         $validated = $request->validate([
             'items' => 'required|array',
             'items.*.id' => 'required|exists:products,id',
@@ -95,7 +94,7 @@ class SaleController extends Controller
             DB::commit();
 
             // Return success response for Inertia
-            return response()->json([
+            return back()->with([
                 'success' => true,
                 'message' => 'Sale completed successfully',
                 'data' => [
@@ -112,10 +111,10 @@ class SaleController extends Controller
             \Log::error('Sale processing failed: ' . $e->getMessage());
             
             // Return error response
-            return response()->json([
+            return back()->with([
                 'success' => false,
                 'message' => 'Failed to process sale: ' . $e->getMessage(),
-            ], 500);
+            ]);
         }
     }
 }
