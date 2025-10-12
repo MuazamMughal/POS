@@ -3,6 +3,8 @@ import { useCartStore } from '@/Stores/cart'
 import { ref, computed, onMounted } from 'vue'
 import { router } from '@inertiajs/vue3'
 
+
+
 const props = defineProps({ 
   products: Array,
   customers: {

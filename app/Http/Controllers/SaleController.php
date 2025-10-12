@@ -25,6 +25,7 @@ class SaleController extends Controller
     public function store(Request $request)
     {
         // Validate the incoming request
+ 
         $validated = $request->validate([
             'items' => 'required|array',
             'items.*.id' => 'required|exists:products,id',
@@ -83,11 +84,11 @@ class SaleController extends Controller
                 $product = Product::findOrFail($item['id']);
                 
                 // Check if there's enough stock
-                if ($product->stock_quantity < $item['quantity']) {
+                if ($product->stock < $item['quantity']) {
                     throw new \Exception("Insufficient stock for product: {$product->name}");
                 }
                 
-                $product->decrement('stock_quantity', $item['quantity']);
+                $product->decrement('stock', $item['quantity']);
             }
 
             // If everything is successful, commit the transaction
