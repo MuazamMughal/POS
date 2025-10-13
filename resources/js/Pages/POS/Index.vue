@@ -73,46 +73,62 @@ const removeDiscount = () => {
 }
 
 // Process payment
-const processPayment = async () => {
-  try {
-    const orderData = {
-      items: cart.items,
-      customer: selectedCustomer.value,
-      subtotal: cart.subtotal,
-      discount: cart.discount,
-      tax: cart.taxAmount,
-      total: cart.total,
-      payment: {
-        method: paymentMethod.value,
-        amount: parseFloat(amountPaid.value) || 0,
-        change: cart.changeDue
-      },
-      notes: orderNotes.value
-    }
+const processPayment = () => {
+  const orderData = {
+    items: cart.items,
+    customer: selectedCustomer.value,
+    subtotal: cart.subtotal,
+    discount: cart.discount,
+    tax: cart.taxAmount,
+    total: cart.total,
+    payment: {
+      method: paymentMethod.value,
+      amount: parseFloat(amountPaid.value) || 0,
+      change: cart.changeDue
+    },
+    notes: orderNotes.value
+  };
 
-    await router.post('/sales', orderData)
+  // Show loading state
+
+  
+  // Close payment modal immediately when form is submitted
+  showPaymentModal.value = false;
+
+  // Use Inertia's router for better SPA experience
+  router.post(route('sales.store'), orderData, {
+    onSuccess: () => {
+      // Clear the cart and reset form
+      cart.clearCart();
+      amountPaid.value = '';
+      orderNotes.value = '';
+      cart.discount = null;
+      selectedCustomer.value = null;
+      showPaymentModal.value = false;
+      
+      
+      // Show success modal
+     
+      
+      // Hide success modal after 3 seconds
     
-    // Clear cart and reset form on success
-    cart.clearCart()
-    showPaymentModal.value = false
-    amountPaid.value = ''
-    orderNotes.value = ''
-    cart.discount = null
-    selectedCustomer.value = null
-
-    // Show success message
-    TransactionCompletModal.value = true
-  } catch (error) {
-    console.error('Payment failed:', error)
-    alert('Payment processing failed. Please try again.')
-  } finally {
-    showPaymentModal.value = false
-    amountPaid.value = ''
-    orderNotes.value = ''
-    cart.discount = null
-    selectedCustomer.value = null
-  }
-}
+    },
+    onError: (errors) => {
+      // Show error message
+      let errorMessage = 'Payment processing failed. Please try again.';
+      if (errors) {
+        errorMessage = Object.values(errors).flat().join(' ');
+      }
+      alert(errorMessage);
+      
+      // Reopen payment modal on error
+      showPaymentModal.value = true;
+    },
+    onFinish: () => {
+      TransactionCompletModal.value = true;
+    }
+  });
+};
 
 // Focus search on component mount
 onMounted(() => {
@@ -395,6 +411,17 @@ onMounted(() => {
 </template>
 
 <style scoped>
+/* Fade transition for modals */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
