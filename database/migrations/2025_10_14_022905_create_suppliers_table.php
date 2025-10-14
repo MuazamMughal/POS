@@ -12,8 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('suppliers', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+             $table->id();
+             $table->string('name');
+             $table->string('company')->nullable();
+             $table->string('contact')->nullable();
+             $table->decimal('balance_due', 10, 2)->default(0);
+             $table->timestamps();
+
         });
     }
 
