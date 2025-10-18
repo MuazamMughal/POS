@@ -15,6 +15,8 @@ import { Link } from '@inertiajs/vue3';
           <Link href="/products" class="block p-2 rounded hover:bg-gray-200">Products</Link>
           <Link href="/sales" class="block p-2 rounded hover:bg-gray-200">Sales</Link>
           <Link href="/customers" class="block p-2 rounded hover:bg-gray-200">Customers</Link>
+          <Link href="/suppliers" class="block p-2 rounded hover:bg-gray-200">Suppliers</Link>
+          <Link href="/purchases" class="block p-2 rounded hover:bg-gray-200">Purchases</Link>
           <Link href="/reports" class="block p-2 rounded hover:bg-gray-200">Reports</Link>
           <Link href="/settings" class="block p-2 rounded hover:bg-gray-200">Settings</Link>
         </nav>
