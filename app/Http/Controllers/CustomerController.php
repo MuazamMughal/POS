@@ -17,12 +17,13 @@ class CustomerController extends Controller
     }
     public function create()
     {
-        return Inertia::render('Customers/Create');
+        return Inertia::render('Customers/CreateCustomers');
     }
 
 
     public function store(Request $request)
     {
+    
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'phone' => 'required|string|max:20|unique:customers',
@@ -34,15 +35,17 @@ class CustomerController extends Controller
         return redirect()->route('customers.index')->with('success', 'Customer created successfully.');
     }
 
-    
+
    public function edit(Customer $customer)
     {
-        return Inertia::render('Customers/Edit', [
+        $customer = Customer::findOrFail($customer->id);
+        return Inertia::render('Customers/EditCustomers', [
             'customer' => $customer
         ]);
     }
    public function update(Request $request, Customer $customer)
     {
+       
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'phone' => 'required|string|max:20|unique:customers,phone,' . $customer->id,
@@ -55,6 +58,7 @@ class CustomerController extends Controller
     }
    public function destroy(Customer $customer)
     {
+        
         $customer->delete();
         return redirect()->route('customers.index')->with('success', 'Customer deleted successfully.');
     }
