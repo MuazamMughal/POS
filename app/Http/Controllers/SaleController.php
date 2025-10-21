@@ -117,4 +117,34 @@ class SaleController extends Controller
             ]);
         }
     }
+
+
+    public function Sales()
+    {
+        $sales = Sale::latest()->get();
+        return Inertia::render('Sales/Index', [
+            'sales' => $sales
+        ]);
+    }
+
+    public function destroy(Sale $sale)
+    {
+        $sale->delete();
+        return redirect()->route('sales.index')->with('success', 'Sale deleted successfully.');
+    }
+
+    public function show(Sale $sale)
+    {
+        $sale = Sale::findOrFail($sale->id);
+        $saleItems = SaleItem::where('sale_id', $sale->id)
+        ->with('product')
+        ->get();
+           
+  
+
+        return Inertia::render('Sales/SaleView', [
+            'sale' => $sale,
+            'saleItems' => $saleItems
+        ]);
+    }
 }
