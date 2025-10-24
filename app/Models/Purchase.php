@@ -4,15 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Supplier;
+use App\Models\Product;
 
 class Purchase extends Model
 {
     protected $fillable = [
         'supplier_id',
-        'product_id',
-        'quantity',
-        'unit_price',
-        'total',
+        'invoice_no',
+        'purchase_date',
+        'total_amount',
+        'paid_amount',
+        'due_amount',
+        'payment_method',
     ];
 
     public function supplier()
