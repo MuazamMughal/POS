@@ -120,6 +120,82 @@ onMounted(() => {
       </div>
     </div>
 
+    <!-- Main Content -->
+    <div class="bg-white   rounded-lg shadow-md p-6 print:shadow-none print:border print:border-gray-200">
+      <!-- Purchase Info -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 print:grid-cols-3 print:gap-4">
+        <div>
+          <h3 class="text-sm font-medium text-gray-500 mb-1">Supplier</h3>
+          <p class="text-gray-900 font-medium">{{ purchase.supplier.name }}</p>
+          <p v-if="purchase.supplier.phone" class="text-gray-600 text-sm">{{ purchase.supplier.phone }}</p>
+        </div>
+
+        <div>
+          <h3 class="text-sm font-medium text-gray-500 mb-1">Invoice No</h3>
+          <p class="text-gray-900 font-medium">{{ purchase.invoice_no }}</p>
+        </div>
+
+        <div>
+          <h3 class="text-sm font-medium text-gray-500 mb-1">Date</h3>
+          <p class="text-gray-900">{{ formatDate(purchase.purchase_date) }}</p>
+        </div>
+      </div>
+
+      <!-- Products Table -->
+      <div class="mb-8">
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200 border">
+            <thead class="bg-gray-50 print:bg-gray-100">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">#</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
+                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Qty</th>
+                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Subtotal</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <tr v-for="(item, index) in items" :key="index" class="hover:bg-gray-50 print:hover:bg-white">
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ index + 1 }}</td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm font-medium text-gray-900">{{ item.product.name }}</div>
+                  <div v-if="item.product.code" class="text-xs text-gray-500">SKU: {{ item.product.code }}</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-500">
+                  {{ item.quantity }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-500">
+                  Rs. {{ parseFloat(item.purchase_price).toFixed(2) }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium text-gray-900">
+                  Rs. {{ parseFloat(item.subtotal).toFixed(2) }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Summary -->
+        <div class="mt-6 w-full md:w-1/2 ml-auto">
+          <div class="bg-gray-50 p-4 rounded-md">
+            <div class="flex justify-between py-2 text-sm">
+              <span class="text-gray-600">Subtotal:</span>
+              <span class="font-medium">Rs. {{ parseFloat(purchase.total_amount).toFixed(2) }}</span>
+            </div>
+            <div class="flex justify-between py-2 text-sm">
+              <span class="text-gray-600">Paid Amount:</span>
+              <span class="font-medium">Rs. {{ parseFloat(purchase.paid_amount || 0).toFixed(2) }}</span>
+            </div>
+            <div class="flex justify-between py-2 text-lg font-bold border-t border-gray-200 mt-2 pt-2">
+              <span>Balance Due:</span>
+              <span :class="dueAmount > 0 ? 'text-red-600' : 'text-green-600'">
+                Rs. {{ dueAmount.toFixed(2) }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Payment & Notes -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8 print:grid-cols-2 print:gap-4">
         <div>
