@@ -63,6 +63,65 @@ function submit() {
       </a>
     </div>
 
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <form @submit.prevent="submit" class="space-y-6">
+        <!-- Supplier and Invoice Info -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Supplier <span class="text-red-500">*</span></label>
+            <select 
+              v-model="form.supplier_id" 
+              required
+              class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            >
+              <option value="">Select Supplier</option>
+              <option v-for="supplier in suppliers" :key="supplier.id" :value="supplier.id">
+                {{ supplier.name }}
+              </option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Invoice No <span class="text-red-500">*</span></label>
+            <input 
+              v-model="form.invoice_no" 
+              type="text" 
+              required
+              class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="INV-001"
+            />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Date <span class="text-red-500">*</span></label>
+            <input 
+              v-model="form.purchase_date" 
+              type="date" 
+              required
+              class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+        </div>
+
    
+
+        <!-- Form Actions -->
+        <div class="flex justify-end space-x-4 pt-4">
+          <a 
+            href="/purchases" 
+            class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          >
+            Cancel
+          </a>
+          <button 
+            type="submit" 
+            :disabled="form.items.length === 0"
+            class="px-6 py-2 border border-transparent rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Save Purchase
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
 </template>
