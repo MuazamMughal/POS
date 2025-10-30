@@ -103,7 +103,90 @@ function submit() {
           </div>
         </div>
 
-   
+        <!-- Products Table -->
+        <div class="mb-6">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-lg font-medium text-gray-800">Products</h2>
+            <button 
+              type="button" 
+              @click="addItem"
+              class="px-3 py-1 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
+              + Add Product
+            </button>
+          </div>
+
+          <div v-if="form.items.length > 0" class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200 border">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Unit Price</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subtotal</th>
+                  <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr v-for="(item, index) in form.items" :key="index" class="hover:bg-gray-50">
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <select 
+                      v-model="item.product_id" 
+                      required
+                      class="w-full px-3 py-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    >
+                      <option value="">Select Product</option>
+                      <option v-for="product in products" :key="product.id" :value="product.id">
+                        {{ product.name }}
+                      </option>
+                    </select>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <input 
+                      v-model.number="item.quantity" 
+                      type="number" 
+                      min="1" 
+                      @input="updateSubtotal(item)"
+                      class="w-20 px-3 py-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <input 
+                      v-model.number="item.purchase_price" 
+                      type="number" 
+                      min="0" 
+                      step="0.01" 
+                      @input="updateSubtotal(item)"
+                      class="w-24 px-3 py-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-gray-900">
+                    Rs. {{ item.subtotal || '0.00' }}
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <button 
+                      type="button" 
+                      @click="removeItem(index)"
+                      class="text-red-600 hover:text-red-900"
+                    >
+                      Remove
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr class="bg-gray-50">
+                  <td colspan="3" class="px-6 py-4 text-right font-medium text-gray-700">Total Amount</td>
+                  <td class="px-6 py-4 font-medium text-gray-900">Rs. {{ totalAmount }}</td>
+                  <td></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+          <div v-else class="text-center py-8 text-gray-500">
+            No products added. Click "Add Product" to get started.
+          </div>
+        </div>
 
         <!-- Form Actions -->
         <div class="flex justify-end space-x-4 pt-4">
